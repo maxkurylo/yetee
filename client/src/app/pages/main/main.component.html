@@ -1,0 +1,45 @@
+
+
+<div class="d-flex flex-column h-100vh w-100vw overflow-hidden">
+
+    <app-header></app-header>
+
+    <div class="flex-grow-1 d-flex main-bg">
+        <app-sidemenu></app-sidemenu>
+
+        <main class="flex-grow-1">
+            <router-outlet></router-outlet>
+        </main>
+
+        <button class="add-button" mat-fab [mat-menu-trigger-for]="addMenu" color="accent">
+            <mat-icon class="add-icon">add</mat-icon>
+        </button>
+    </div>
+
+</div>
+
+
+<mat-menu #addMenu="matMenu">
+
+    <button mat-menu-item>
+        <mat-icon>profile</mat-icon>
+        <span>Write post</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item>
+        <mat-icon>profile</mat-icon>
+        <span>Create group</span>
+    </button>
+
+    <button mat-menu-item>
+        <mat-icon>profile</mat-icon>
+        <span>New whiteboard</span>
+    </button>
+
+    <button mat-menu-item>
+        <mat-icon>profile</mat-icon>
+        <span>Make a call</span>
+    </button>
+</mat-menu>

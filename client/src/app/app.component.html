@@ -1,0 +1,19 @@
+<router-outlet></router-outlet>
+
+<app-video-call
+        *ngIf="showCall"
+        [callTitle]="callTitle"
+        [callId]="callId"
+        (close)="finishCall()"
+>
+
+</app-video-call>
+
+<app-incoming-video-call
+        *ngIf="showIncomingCallBanner"
+        [callTitle]="callTitle"
+        (accept)="acceptCall($event)"
+        (decline)="declineCall($event)"
+        (mute)="muteCall($event)"
+>
+</app-incoming-video-call>

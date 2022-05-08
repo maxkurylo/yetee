@@ -1,0 +1,33 @@
+.incoming-call-banner {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #140a1a;
+    background: linear-gradient(0deg, #0c0d20 0%, #220c06 100%);
+    color: #fff;
+    padding: 40px;
+    padding-bottom: 20px;
+    border-radius: 20px;
+    animation: fadeIn .3s, pulse 1.5s infinite;
+}
+
+.call-title {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+
+.call-end-btn {
+    color: #fff;
+    background-color: var(--color-warn-500);
+}
+
+.call-accept-btn {
+    color: #fff;
+    background-color: var(--color-success-500);
+}
+
+.call-mute-btn {
+    background-color: transparent;
+    color: #fff;
+}

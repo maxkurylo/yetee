@@ -1,0 +1,17 @@
+<div class="avatar" [class.square]="isSquare">
+    <div
+            *ngIf="showStatusIndicator"
+            [class.status-indicator]="showStatusIndicator"
+            [class.online]="status === 'online'"
+            [class.in-meeting]="status === 'in-meeting'"
+            [matTooltip]="tooltipStatus"
+            [matTooltipShowDelay]="700"
+    ></div>
+    <img
+            *ngIf="avatarUrl && !avatarUrlError"
+            [src]="avatarUrl"
+            alt="avatar"
+            (error)="avatarUrlError = true"
+    >
+    <span *ngIf="!avatarUrl || avatarUrlError">{{abbreviation}}</span>
+</div>

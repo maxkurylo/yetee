@@ -1,0 +1,32 @@
+<div class="d-flex flex-column h-100">
+    <app-sub-header>
+        <div class="d-flex align-items-center flex-grow-1">
+            <app-avatar
+                    [avatarUrl]="gs.selectedGroup?.avatarUrl || ''"
+                    [name]="gs.selectedGroup?.name || ''"
+                    [isSquare]="true"
+            ></app-avatar>
+            <div class="ml-2 d-flex flex-column justify-content-center">
+                <h3 class="group-name m-0"><b>{{gs.selectedGroup?.name}}</b></h3>
+                <span class="members-count">{{gs.selectedGroup?.participants?.length}} members</span>
+            </div>
+        </div>
+        <div>
+            <button mat-flat-button class="mr-1 sub-header-button" (click)="callNow()">
+                <mat-icon>call</mat-icon> Call now
+            </button>
+
+            <button mat-flat-button class="sub-header-button">
+                <mat-icon>event</mat-icon> Schedule
+            </button>
+        </div>
+    </app-sub-header>
+
+    <div class="flex-grow-1">
+        <app-chat></app-chat>
+    </div>
+</div>
+
+
+
+

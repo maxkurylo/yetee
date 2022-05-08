@@ -1,0 +1,20 @@
+<div class="incoming-call-banner">
+    <h4 class="text-center mb-5 call-title">{{callTitle}}</h4>
+
+    <div class="d-flex">
+        <div class="text-center d-flex flex-column mr-5">
+            <button mat-fab class="call-end-btn" (click)="decline.emit(callId)"><mat-icon>call_end</mat-icon></button>
+            <span class="mt-1 font-light">Decline</span>
+        </div>
+
+        <div class="text-center d-flex flex-column">
+            <button mat-fab class="call-accept-btn" (click)="accept.emit(callId)"><mat-icon>call</mat-icon></button>
+            <span class="mt-1 font-light">Accept</span>
+        </div>
+    </div>
+
+    <div class="text-center mt-2">
+        <button mat-flat-button class="call-mute-btn" (click)="mute.emit(callId)">Mute</button>
+    </div>
+
+</div>

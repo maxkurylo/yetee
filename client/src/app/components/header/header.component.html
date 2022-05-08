@@ -1,0 +1,84 @@
+<header class="d-flex align-items-center justify-content-between px-3 w-100 header">
+    <div>
+        <button class="vertical-mat-button"
+                mat-button
+                [matMenuTriggerFor]="menu"
+        >
+            <mat-icon>person</mat-icon>
+            Profile
+        </button>
+        <button
+                class="vertical-mat-button"
+                mat-button
+                routerLink="/"
+        >
+            <mat-icon>home</mat-icon>
+            Feed
+        </button>
+        <button class="vertical-mat-button" mat-button>
+            <mat-icon
+                    matBadge="8"
+                    matBadgeColor="accent"
+                    matBadgeSize="small"
+            >
+                notifications_outline
+            </mat-icon>
+            Notifications
+        </button>
+        <button class="vertical-mat-button" mat-button><mat-icon>today</mat-icon>Events</button>
+        <button class="vertical-mat-button" mat-button><mat-icon>task</mat-icon>Tasks</button>
+    </div>
+    <div class="d-flex align-items-center">
+        <button
+                mat-icon-button
+                class="nav-button"
+                matTooltip="Back"
+                [matTooltipShowDelay]="700"
+        >
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button
+                mat-icon-button
+                class="nav-button mr-2"
+                matTooltip="Forward"
+                [matTooltipShowDelay]="700"
+                disabled
+        >
+            <mat-icon>arrow_forward</mat-icon>
+        </button>
+        <div class="position-relative">
+            <input type="text" class="search form-control" placeholder="Search anything...">
+            <mat-icon class="search-icon">search</mat-icon>
+        </div>
+    </div>
+</header>
+
+
+<mat-menu #menu="matMenu">
+    <div class="d-flex py-2 px-3 align-items-center profile-info">
+        <app-avatar
+                [avatarUrl]="cu.user.avatarUrl || ''"
+                [name]="cu.user.name || ''"
+        ></app-avatar>
+        <div class="mx-2 profile-description">
+            <p class="mb-0 px-1">{{cu.user.name}}</p>
+            <button mat-button class="status-button px-1">
+                <span class="status-icon"></span> Online
+            </button>
+        </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item>
+        <mat-icon>profile</mat-icon>
+        <span>Manage profile</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+    </button>
+</mat-menu>

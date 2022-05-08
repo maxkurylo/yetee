@@ -1,0 +1,41 @@
+$border-color: #217093;
+$bg-color: #a9ddf3;
+$skin-color: #ddf1fa;
+$body-color: #fff;
+$stroke-color: #3a5e77;
+$mouth-color: #617E92;
+$tongue-color: #cc4a6c;
+$tongue-highlight-color: #fff;
+$tooth-color: #fff;
+$nails-color: #a9ddf3;
+
+.yeti {
+    width: 200px;
+    height: 200px;
+    background-color: $bg-color;
+    position: relative;
+
+    //&::after {
+    //    content: "";
+    //    position: absolute;
+    //    top: 0;
+    //    left: 0;
+    //    z-index: 10;
+    //    width: inherit;
+    //    height: inherit;
+    //    box-sizing: border-box;
+    //    border: solid 2px $border-color;
+    //}
+
+    .stroke { stroke: $stroke-color; }
+
+    .fill-bg { fill: $bg-color; }
+    .fill-skin { fill: $skin-color; }
+    .fill-body { fill: $body-color; }
+    .fill-stroke { fill: $stroke-color; }
+    .fill-mouth { fill: $mouth-color; }
+    .fill-tongue { fill: $tongue-color; }
+    .fill-tongue-highlight { fill: $tongue-highlight-color; }
+    .fill-tooth { fill: $tooth-color; }
+    .fill-nail { fill: $nails-color; }
+}

@@ -1,0 +1,29 @@
+<div class="d-flex flex-column h-100">
+    <app-sub-header>
+        <div class="d-flex align-items-center flex-grow-1">
+            <app-avatar
+                    [avatarUrl]="us.selectedUser?.avatarUrl || ''"
+                    [name]="us.selectedUser?.name || ''"
+                    [showStatusIndicator]="!!us.selectedUser?.status || false"
+            ></app-avatar>
+            <h3 class="ml-2 m-0"><b>{{us.selectedUser?.name}}</b></h3>
+        </div>
+        <div>
+            <button mat-flat-button class="mr-1 sub-header-button" (click)="callNow()">
+                <mat-icon>call</mat-icon> Call now
+            </button>
+
+            <button mat-flat-button class="sub-header-button">
+                <mat-icon>event</mat-icon> Schedule
+            </button>
+        </div>
+    </app-sub-header>
+
+    <div class="flex-grow-1">
+        <app-chat></app-chat>
+    </div>
+</div>
+
+
+
+

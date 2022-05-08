@@ -1,0 +1,54 @@
+.form {
+    overflow-y: auto;
+    max-height: 350px;
+    max-width: 500px;
+}
+
+.group-avatar {
+    font-size: 2rem;
+}
+
+.user-element {
+    user-select: none;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: var(--color-grey-100);
+    }
+}
+
+::ng-deep {
+    .participant-checkbox {
+        .mat-checkbox-inner-container {
+            width: 25px;
+            height: 25px;
+
+            .mat-checkbox-frame,
+            .mat-checkbox-background {
+                border-radius: 50%;
+                border-color: var(--color-grey-400)
+            }
+
+            &:hover {
+                .mat-ripple-element {
+                    background-color: transparent;
+                }
+            }
+        }
+
+        &.mat-checkbox-checked.mat-primary .mat-checkbox-background {
+            background-color: var(--color-primary-400);
+        }
+    }
+
+    .user-element {
+        .mat-checkbox-checked ~ .user-avatar {
+            opacity: .7;
+        }
+
+        .mat-checkbox-checked ~ .user-name {
+            color: var(--color-primary-400)
+        }
+    }
+}

@@ -1,0 +1,20 @@
+.side-panel {
+    width: 300px;
+}
+
+.user-element,
+.group-element {
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    transition: border-left-color .15s;
+    outline: none;
+
+    &:hover {
+        background-color: #fff;
+    }
+
+    &.active {
+        background-color: #fff;
+        border-left-color: var(--color-primary-500);
+    }
+}

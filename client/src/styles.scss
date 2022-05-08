@@ -1,0 +1,169 @@
+@import "palette";
+@import "animations";
+
+
+$dark-green: var(--color-primary-600);
+$green: var(--color-accent-100);
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    color: var(--color-grey-800);
+}
+
+.gradient-background {
+    background: $dark-green;
+    background: -webkit-linear-gradient(top left, $dark-green 0%, $green 100%);
+    background: -moz-linear-gradient(top left, $dark-green 0%, $green 100%);
+    background: -o-linear-gradient(top left, $dark-green 0%, $green 100%);
+    background: linear-gradient(to bottom right, $dark-green 0%, $green 100%);
+}
+
+
+.yt-link {
+    color: #2f81d6;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:visited {
+        color: #681da8;
+    }
+}
+
+.h-100 { height: 100% }
+.w-100 { width: 100% }
+.h-100vh { height: 100vh }
+.w-100vw { width: 100vw }
+
+.max-width-100 { max-width: 100% }
+
+// on some reason these classes are now named ps and pe in bootstrap
+
+.pr-0 { padding-right:0!important }
+.pr-1 { padding-right:.25rem!important }
+.pr-2 { padding-right:.5rem!important }
+.pr-3 { padding-right:1rem!important }
+.pr-4 { padding-right:1.5rem!important }
+.pr-5 { padding-right:3rem!important }
+.pl-0 { padding-left:0!important }
+.pl-1 { padding-left:.25rem!important }
+.pl-2 { padding-left:.5rem!important }
+.pl-3 { padding-left:1rem!important }
+.pl-4 { padding-left:1.5rem!important }
+.pl-5 { padding-left:3rem!important }
+
+// same for margin
+.mr-0{margin-right:0!important}
+.mr-1{margin-right:.25rem!important}
+.mr-2{margin-right:.5rem!important}
+.mr-3{margin-right:1rem!important}
+.mr-4{margin-right:1.5rem!important}
+.mr-5{margin-right:3rem!important}
+.ml-0{margin-left:0!important}
+.ml-1{margin-left:.25rem!important}
+.ml-2{margin-left:.5rem!important}
+.ml-3{margin-left:1rem!important}
+.ml-4{margin-left:1.5rem!important}
+.ml-5{margin-left:3rem!important}
+
+.color-grey-600 { color: var(--color-grey-600) }
+
+.text-center { text-align: center !important }
+.text-right { text-align: right !important }
+.text-left { text-align: left !important }
+
+.font-light { font-weight: 100 !important }
+
+.cursor-pointer { cursor: pointer !important }
+
+// override styles
+
+.vertical-mat-button .mat-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+    font-size: .8rem;
+    font-weight: 300;
+}
+
+.mat-divider.mat-divider-horizontal {
+    margin-top: .4rem;
+    margin-bottom: .4rem;
+}
+
+.mat-menu-item {
+    line-height: 2.5 !important;
+    height: auto !important;
+}
+
+.mat-menu-panel {
+    max-width: unset !important;
+}
+
+.mat-tooltip {
+    background: var(--color-grey-300);
+    color: var(--color-grey-800) !important;
+    font-size: .8rem !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    margin: 5px !important;
+}
+
+.mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab, .mat-icon-button {
+    color: var(--color-grey-700);
+    font-weight: normal;
+}
+
+
+.mat-stepper-horizontal {
+    .mat-horizontal-content-container {
+        padding: 0;
+    }
+}
+.mat-horizontal-stepper-header {
+    height: auto !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+
+    &:hover,
+    &.cdk-focused {
+        background-color: transparent !important;
+    }
+
+    .mat-step-icon {
+        background-color: var(--color-grey-500);
+
+        &.mat-step-icon-selected {
+            background-color: var(--color-success-600);
+        }
+
+        &.mat-step-icon-state-edit {
+            background-color: var(--color-success-300);
+        }
+    }
+
+    .mat-step-label {
+        &.mat-step-label-active {
+            color: var(--color-success-300);
+        }
+
+        &.mat-step-label-selected {
+            color: var(--color-success-600);
+        }
+    }
+}
+
+.mat-form-field-outline-start,
+.mat-form-field-outline-gap,
+.mat-form-field-outline-end {
+    background-color: #fff;
+}
+

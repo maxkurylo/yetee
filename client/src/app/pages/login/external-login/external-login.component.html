@@ -1,0 +1,26 @@
+<div class="text-center">
+    <div class="my-3 d-flex justify-content-center align-items-center divider-wrapper">
+        <div class="flex-grow-1 divider"></div>
+        <div class="divider-badge mx-2">or use</div>
+        <div class="flex-grow-1 divider"></div>
+    </div>
+
+    <a
+            mat-icon-button
+            href="/api/auth/google"
+            class="external-login-button google mr-2"
+            matTooltip="Log in with Google"
+            [matTooltipShowDelay]="700"
+    >
+        <i class="fab fa-google"></i>
+    </a>
+    <a
+            mat-icon-button
+            href="/api/auth/linkedin"
+            class="external-login-button linkedin"
+            matTooltip="Log in with LinkedIn"
+            [matTooltipShowDelay]="700"
+    >
+        <i class="fab fa-linkedin-in"></i>
+    </a>
+</div>

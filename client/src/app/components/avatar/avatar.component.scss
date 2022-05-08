@@ -1,0 +1,49 @@
+
+.avatar {
+    height: 2.5em;
+    width: 2.5em;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--color-primary-50);
+    color: var(--color-accent-500);
+    text-transform: uppercase;
+    box-shadow: 0 0 2px 1px var(--color-grey-300);
+    user-select: none;
+    position: relative;
+
+    .status-indicator {
+        position: absolute;
+        bottom: -3px;
+        right: -3px;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        border: 1px solid var(--color-grey-300);
+        background-color: #fff;
+
+        &.online {
+            background-color: var(--color-success-400);
+        }
+
+        &.in-meeting {
+            background-color: var(--color-warn-700);
+        }
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 50%;
+    }
+
+    &.square {
+        border-radius: .5em;
+
+        img {
+            border-radius: .5em;
+        }
+    }
+}

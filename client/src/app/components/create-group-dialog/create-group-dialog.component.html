@@ -1,0 +1,46 @@
+<ng-template #createGroupDialogTemplate>
+    <h3>Create group</h3>
+
+    <form [formGroup]="groupCreationForm" (keydown.enter)="$event.preventDefault()" class="form">
+        <div class="d-flex align-items-center mt-3">
+            <app-avatar [name]="'Group'" class="group-avatar mr-3" [isSquare]="true"></app-avatar>
+            <mat-form-field appearance="fill" class="pt-3 flex-grow-1">
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Group name" formControlName="name" required>
+            </mat-form-field>
+        </div>
+
+        <p class="mt-2">Participants:</p>
+        <div class="container">
+            <div class="row">
+                <ng-container
+                        *ngFor="let user of availableUsers"
+                        [ngTemplateOutlet]="userTemplate"
+                        [ngTemplateOutletContext]="{user: user}"
+                ></ng-container>
+            </div>
+        </div>
+    </form>
+
+    <div class="text-right pt-3">
+        <button mat-flat-button type="button" (click)="closeCreateGroupDialog()" class="mr-2">Cancel</button>
+        <button mat-flat-button color="primary" (click)="createGroup()">Done!</button>
+    </div>
+</ng-template>
+
+
+
+<ng-template #userTemplate let-user="user">
+    <label
+            class="user-element col-6 d-flex flex-row-reverse align-items-center py-1"
+    >
+        <mat-checkbox
+                (change)="editParticipants($event, user.id)"
+                color="primary"
+                class="participant-checkbox"
+                disableRipple
+        ></mat-checkbox>
+        <span class="user-name mx-2 flex-grow-1">{{user.name}}</span>
+        <app-avatar class="user-avatar" [name]="user.name" [avatarUrl]="user.avatarUrl"></app-avatar>
+    </label>
+</ng-template>

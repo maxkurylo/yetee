@@ -1,0 +1,68 @@
+
+<div class="h-100 d-flex flex-column">
+    <div class="flex-grow-1 overflow-auto container d-flex flex-column justify-content-end">
+        <ng-container [ngTemplateOutlet]="timeDivider"></ng-container>
+        <ng-container [ngTemplateOutlet]="myMessage"></ng-container>
+        <ng-container [ngTemplateOutlet]="othersMessage"></ng-container>
+    </div>
+
+    <div class="container py-4">
+        <div class="row">
+            <div class="offset-md-2 offset-sm-0 col-md-8 col-sm-12">
+                <div class="position-relative">
+                    <button mat-icon-button class="emoji-button"><mat-icon>sentiment_satisfied_alt</mat-icon></button>
+                    <input type="text" class="message-input w-100" placeholder="Type new message...">
+                    <button mat-icon-button class="send-button"><mat-icon>send</mat-icon></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #myMessage>
+    <div class="row w-100">
+        <div class="offset-md-4 offset-sm-2 col-md-6 col-sm-10">
+            <p class="mb-0 color-grey-600 text-end message-time">{{mockMyMessagesTime}}</p>
+            <div class="message my-message px-3 py-2 mt-1">
+                Ok, this is just a mock chat. Nothing serious
+            </div>
+            <div class="message my-message px-3 py-2 mt-1">
+                Working chat is yet to come, I promise
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #othersMessage>
+    <div class="row w-100">
+        <div class="offset-md-2 offset-sm-0 col-md-6 col-sm-10">
+            <p class="mb-0 color-grey-600 message-time">{{mockOtherMessagesTime}}</p>
+            <div class="message px-3 py-2 mt-1">
+                I want to believe you
+            </div>
+            <div class="message px-3 py-2 mt-1">
+                But I need to have a call with you to know for sure...
+            </div>
+            <div class="message px-3 py-2 mt-1">
+                Click the button at the top left corner and call me
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #timeDivider>
+    <div class="row w-100">
+        <div class="offset-md-2 offset-sm-0 col-md-8 col-sm-12">
+            <div class="w-100 text-center py-3 position-relative">
+                <div class="w-100 chat-time-divider"></div>
+                <span class="chat-time-badge py-1 px-4">Today</span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+

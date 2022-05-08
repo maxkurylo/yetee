@@ -1,0 +1,34 @@
+$google-brand-color: #ea4335;
+$linkedIn-brand-color: #0966c2;
+$facebook-brand-color: #4267B2;
+
+.divider-wrapper {
+    width: 225px;
+
+    .divider {
+        height: 1px;
+        background-color: #fff;
+    }
+
+    .divider-badge {
+        font-size: 1rem;
+        color: #fff;
+    }
+}
+
+.external-login-button {
+    color: #fff;
+    opacity: .9;
+
+    &.google {
+        background-color: $google-brand-color;
+    }
+
+    &.linkedin {
+        background-color: $linkedIn-brand-color;
+    }
+
+    &.facebook {
+        background-color: $facebook-brand-color;
+    }
+}

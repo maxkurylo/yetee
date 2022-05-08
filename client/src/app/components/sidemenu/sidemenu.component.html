@@ -1,0 +1,62 @@
+<aside class="h-100 d-flex flex-column side-panel">
+    <h3 class="pl-3 pt-3"><b>Groups and contacts</b></h3>
+    <div class="flex-grow-1 overflow-auto">
+        <ng-container
+                *ngFor="let group of filteredGroups"
+                [ngTemplateOutlet]="groupTemplate"
+                [ngTemplateOutletContext]="{group: group}"
+        ></ng-container>
+        <ng-container
+                *ngFor="let user of filteredUsers"
+                [ngTemplateOutlet]="userTemplate"
+                [ngTemplateOutletContext]="{user: user}"
+        ></ng-container>
+    </div>
+    <div class="border-top p-1 pr-2 ">
+        <button
+                mat-button
+                class="w-100 text-start color-grey-600 fw-normal"
+                (click)="openCreateGroupDialog()"
+        >
+            <mat-icon class="mr-2">person_add_alt_1</mat-icon>
+            Create group
+        </button>
+    </div>
+</aside>
+
+
+
+<ng-template #userTemplate let-user="user">
+    <div
+            class="user-element px-2 py-1 d-flex align-items-center"
+            [class.active]="user.id === us.selectedUserId"
+            (click)="navigate(user)"
+    >
+        <app-avatar
+                [name]="user.name"
+                [avatarUrl]="user.avatarUrl"
+                [showStatusIndicator]="!!user.status"
+                [status]="user.status"
+        ></app-avatar>
+        <span class="mx-2">{{user.name}}</span>
+    </div>
+</ng-template>
+
+
+<ng-template #groupTemplate let-group="group">
+    <div
+            class="group-element px-2 py-1 d-flex align-items-center"
+            [class.active]="group.id === gs.selectedGroupId"
+            (click)="navigate(group)"
+    >
+        <app-avatar
+                [name]="group.name"
+                [avatarUrl]="group.avatarUrl"
+                [isSquare]="true"
+        ></app-avatar>
+        <span class="mx-2">{{group.name}}</span>
+    </div>
+</ng-template>
+
+
+<app-create-group-dialog [(showDialog)]="showCreateGroupDialog"></app-create-group-dialog>

@@ -1,0 +1,61 @@
+
+.header {
+    background-color: var(--color-primary-500);
+    box-shadow: 5px 0 10px 0 var(--color-grey-400);
+    z-index: 1;
+
+    .nav-button {
+        color: var(--color-grey-100);
+
+        &:disabled {
+            color: var(--color-grey-500);
+        }
+    }
+
+    .search {
+        padding-bottom: 4px;
+        padding-top: 4px;
+        font-size: .9rem;
+        background-color: var(--color-grey-100);
+        width: 270px;
+        color: var(--color-grey-700);
+        padding-right: 28px;
+        outline: none;
+        box-shadow: none;
+    }
+
+    .search-icon {
+        position: absolute;
+        top: 4px;
+        right: 2px;
+        color: var(--color-grey-500);
+    }
+
+    .vertical-mat-button {
+        color: var(--color-grey-100);
+        padding-top: 10px;
+        padding-bottom: 8px;
+    }
+}
+
+.profile-info {
+    font-size: 1.3rem;
+    min-width: 320px;
+
+    .profile-description {
+        font-size: 1.2rem;
+
+        .status-button {
+            line-height: 1.5;
+            font-weight: 400;
+
+            .status-icon {
+                display: inline-block;
+                width: .5rem;
+                height: .5rem;
+                border-radius: 50%;
+                background-color: var(--color-success-500);
+            }
+        }
+    }
+}

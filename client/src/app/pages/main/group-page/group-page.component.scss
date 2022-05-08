@@ -1,0 +1,17 @@
+.group-name {
+    line-height: 1.2;
+}
+
+.members-count {
+    color: var(--colorgrey-600);
+    font-size: .8rem;
+    line-height: 1;
+}
+
+.sub-header-button {
+    border: 1px solid var(--color-grey-300);
+
+    &:hover {
+        color: var(--color-primary-500);
+    }
+}
