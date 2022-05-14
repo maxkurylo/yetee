@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     sessionExpireTime: 3600 * 24, // one day,
     emailVerificationNeeded: false,
 

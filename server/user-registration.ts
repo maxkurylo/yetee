@@ -1,11 +1,14 @@
-const User = require('./models/user');
-const randomstring = require("randomstring");
+import User, { IUser, IUserDocument } from './models/user';
+import randomstring from 'randomstring';
 
-module.exports = function(userData = {}) {
+
+
+export function generateUser(userData: IUser = {}): IUserDocument {
     const { name, email, password, avatarUrl, google_id, facebook_id, linkedin_id } = userData;
 
     const login = randomstring.generate({ length: 10 });
     const emailVerificationToken = randomstring.generate({ length: 64 });
+
     return new User({
         name,
         email,
@@ -18,4 +21,4 @@ module.exports = function(userData = {}) {
         facebook_id,
         linkedin_id
     });
-};
+}
