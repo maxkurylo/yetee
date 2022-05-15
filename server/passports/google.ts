@@ -1,25 +1,18 @@
-import User, { IUserDocument } from '../models/user';
+import User  from '../models/user';
 import { OAuth2Strategy, IOAuth2StrategyOption, Profile } from 'passport-google-oauth';
 import { VerifiedCallback } from 'passport-jwt';
-import { PassportStatic } from 'passport';
-import { generateUser}  from '../user-registration';
+import passport from 'passport';
+import generateUser  from '../generate-user';
+import {IUserDocument} from "../typings/user";
 
-// Use the GoogleStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Google
-//   profile), and invoke a callback with a user object.
 
-const GOOGLE_CLIENT_ID: string = process.env.GOOGLE_CLIENT_ID || '';
-const GOOGLE_CLIENT_SECRET: string = process.env.GOOGLE_CLIENT_SECRET || '';
-const APP_URL: string = process.env.APP_URL || '';
+export default function(clientID: string, clientSecret: string, callbackURL: string) {
+    const opts: IOAuth2StrategyOption = {
+        clientID,
+        clientSecret,
+        callbackURL,
+    };
 
-const opts: IOAuth2StrategyOption = {
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: `${APP_URL}/api/auth/google/callback`
-};
-
-export default function(passport: PassportStatic) {
     passport.use(new OAuth2Strategy(opts, (accessToken: string, refreshToken: string, profile: Profile, done: VerifiedCallback) => {
         User.findOne({ google_id: profile.id })
             .exec()

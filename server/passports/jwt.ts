@@ -1,17 +1,15 @@
 import User from '../models/user';
-import {Strategy, ExtractJwt, VerifiedCallback, StrategyOptions} from 'passport-jwt';
-import {PassportStatic} from 'passport';
+import { Strategy, ExtractJwt, VerifiedCallback, StrategyOptions } from 'passport-jwt';
+import passport from 'passport';
 
-const SECRET = process.env.SECRET;
+export default function(jwtSecret: string) {
+    const opts: StrategyOptions = {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: jwtSecret,
+    };
 
-const opts: StrategyOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: SECRET,
-};
-
-export default function(passport: PassportStatic) {
-    passport.use(new Strategy(opts, (jwtPayload: any, done: VerifiedCallback) => {
-        User.findOne({_id: jwtPayload.id})
+    passport.use(new Strategy(opts, (userId: string, done: VerifiedCallback) => {
+        User.findOne({_id: userId})
             .exec()
             .then(user => done(null, user))
             .catch(err => done(err, null));

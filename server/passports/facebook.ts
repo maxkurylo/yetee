@@ -1,21 +1,18 @@
-import User, {IUserDocument} from '../models/user';
+import User from '../models/user';
 import {Strategy, StrategyOption, Profile} from 'passport-facebook';
 import { VerifiedCallback } from 'passport-jwt';
-import { PassportStatic } from 'passport';
-import { generateUser}  from '../user-registration';
+import passport from 'passport';
+import generateUser from '../generate-user';
+import {IUserDocument} from "../typings/user";
 
 
-const FACEBOOK_CLIENT_ID: string = process.env.FACEBOOK_CLIENT_ID || '';
-const FACEBOOK_CLIENT_SECRET: string = process.env.FACEBOOK_CLIENT_SECRET || '';
-const APP_URL: string = process.env.APP_URL || '';
+export default function(clientID: string, clientSecret: string, callbackURL: string) {
+    const opts: StrategyOption = {
+        clientID,
+        clientSecret,
+        callbackURL,
+    };
 
-const opts: StrategyOption = {
-    clientID: FACEBOOK_CLIENT_ID,
-    clientSecret: FACEBOOK_CLIENT_SECRET,
-    callbackURL: `${APP_URL}/api/auth/facebook/callback`
-};
-
-export default function(passport: PassportStatic) {
     passport.use(new Strategy(opts, (accessToken: string, refreshToken: string, profile: Profile, done: VerifiedCallback) => {
         User.findOne({ facebook_id: profile.id })
             .exec()

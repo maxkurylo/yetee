@@ -1,9 +1,10 @@
-import User, { IUser, IUserDocument } from './models/user';
+import User from './models/user';
 import randomstring from 'randomstring';
+import { IUser, IUserDocument } from "./typings/user";
 
 
 
-export function generateUser(userData: IUser = {}): IUserDocument {
+export default function (userData: IUser = {}): IUserDocument {
     const { name, email, password, avatarUrl, google_id, facebook_id, linkedin_id } = userData;
 
     const login = randomstring.generate({ length: 10 });
