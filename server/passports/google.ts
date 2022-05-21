@@ -2,10 +2,10 @@ import User  from '../models/user';
 import { OAuth2Strategy, IOAuth2StrategyOption, Profile } from 'passport-google-oauth';
 import { VerifiedCallback } from 'passport-jwt';
 import passport from 'passport';
-import generateUser  from '../generate-user';
-import {IUserDocument} from "../typings/user";
+import {IUser} from "../typings/user";
 
-
+// TODO: check user email
+// TODO: add user avatar
 export default function(clientID: string, clientSecret: string, callbackURL: string) {
     const opts: IOAuth2StrategyOption = {
         clientID,
@@ -14,27 +14,25 @@ export default function(clientID: string, clientSecret: string, callbackURL: str
     };
 
     passport.use(new OAuth2Strategy(opts, (accessToken: string, refreshToken: string, profile: Profile, done: VerifiedCallback) => {
-        User.findOne({ google_id: profile.id })
+        User.findOne({ externalId: profile.id })
             .exec()
             .then(user => {
                 if (user) {
+                    // user exists, log it in
                     return done(null, user)
                 }
-                addGoogleUser(profile)
+                // create new user
+                const newUser: IUser = {
+                    name: profile.displayName,
+                    email: profile.emails ? profile.emails[0].value : '',
+                    externalId: profile.id,
+                    // avatar: profile._json.picture,
+                    isActive: true,
+                };
+                User.addUser(newUser)
                     .then(createdUser => done(null, createdUser))
                     .catch(err => done(err, null));
             })
             .catch(err => done(err, null));
     }));
 };
-
-
-function addGoogleUser(profile: Profile): Promise<IUserDocument | null> {
-    const newUser = generateUser({
-        name: profile.displayName,
-        avatarUrl: profile._json.picture,
-        google_id: profile.id
-    });
-
-    return User.addUser(newUser);
-}

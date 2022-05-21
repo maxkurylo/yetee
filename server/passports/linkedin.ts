@@ -1,11 +1,10 @@
 import User from '../models/user';
 import {Strategy, StrategyOption, Profile} from 'passport-linkedin-oauth2';
 import { VerifiedCallback } from 'passport-jwt';
-import generateUser from '../generate-user';
 import passport from 'passport';
-import {IUserDocument} from "../typings/user";
+import {IUser} from "../typings/user";
 
-
+// TODO: take care of avatar
 export default function(clientID: string, clientSecret: string, callbackURL: string) {
     const opts: StrategyOption = {
         clientID,
@@ -15,35 +14,24 @@ export default function(clientID: string, clientSecret: string, callbackURL: str
     };
 
     passport.use(new Strategy(opts, (accessToken: string, refreshToken: string, profile: Profile, done: VerifiedCallback) => {
-        User.findOne({ linkedin_id: profile.id })
+        User.findOne({ externalId: profile.id })
             .exec()
             .then(user => {
                 if (user) {
+                    // user exists, log it in
                     return done(null, user)
                 }
-                addLinkedInUser(profile)
+                // create new user
+                const newUser: IUser = {
+                    name: profile.displayName,
+                    externalId: profile.id,
+                    email: profile.emails[0].value,
+                    isActive: true,
+                };
+                User.addUser(newUser)
                     .then(createdUser => done(null, createdUser))
                     .catch(err => done(err, null));
             })
             .catch(err => done(err, null));
     }));
 };
-
-
-function addLinkedInUser(profile: Profile): Promise<IUserDocument | null> {
-    let photo;
-    if (profile.photos) { // if there any photos in profile
-        photo = profile.photos[profile.photos.length - 1]; // select one with the largest resolution
-        if (photo) {
-            photo = photo.value;
-        }
-    }
-    const newUser = generateUser({
-        name: profile.displayName,
-        avatarUrl: photo,
-        linkedin_id: profile.id,
-        email: profile.emails[0].value
-    });
-
-    return User.addUser(newUser);
-}

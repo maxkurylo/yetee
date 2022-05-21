@@ -1,20 +1,16 @@
 import {Schema, model, UpdateWriteOpResult} from 'mongoose';
 import bcrypt from 'bcryptjs';
-import {IUserDocument, IUserModel} from "../typings/user";
+import {IUser, IUserDocument, IUserModel} from "../typings/user";
 
 
 const UserSchema = new Schema<IUserModel>({
-    login: { type: String,  required: true,  unique: true },
-    name: { type: String, required: true },
-    emailIsVerified: { type: Boolean, default: false },
-    password: String,
-    avatarUrl: String,
-    emailVerificationToken: String,
-    email: String, // used for local strategy
-    facebook_id:  String,
-    google_id: String,
-    linkedin_id: String,
-    status: String, // online | offline | in-meeting | undefined
+    email:      { type: String, required: true,  unique: true },
+    name:       { type: String, required: true },
+    isActive:   { type: Boolean, required: true, default: false },
+    password:   { type: String, required: false },
+    avatar:     { type: String, required: false },
+    externalId: { type: String, required: false },
+    metadata:   { type: Schema.Types.Mixed, required: false },
 });
 
 
@@ -28,10 +24,6 @@ UserSchema.statics.getUserByEmail = async function(email: string): Promise<IUser
     return await this.findOne({ email }).exec();
 };
 
-UserSchema.statics.getUserByLogin = async function(login: string): Promise<IUserDocument | null> {
-    return await this.findOne({ login }).exec();
-};
-
 UserSchema.statics.getUserById = async function(id: string): Promise<IUserDocument | null> {
     return await this.findById(id).exec();
 };
@@ -40,7 +32,8 @@ UserSchema.statics.getAllUsers = async function(): Promise<IUserDocument[]> {
     return await this.find({}).exec();
 };
 
-UserSchema.statics.addUser = function(newUser: IUserDocument): Promise<IUserDocument> {
+UserSchema.statics.addUser = function(user: IUser): Promise<IUserDocument> {
+    const newUser = new User(user);
     if (newUser.password) {
         newUser.password = hashPassword(newUser.password);
     }

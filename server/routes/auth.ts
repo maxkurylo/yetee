@@ -3,7 +3,7 @@ import User from '../models/user';
 import jwt, {SignOptions} from 'jsonwebtoken';
 import config from '../config';
 import passport, {AuthenticateOptions} from 'passport';
-import generateUser  from '../generate-user';
+import generateUser  from '../externalUserLogin';
 import {ErrorBody} from "../typings/error";
 import jwtMiddleware from '../passports/jwt-middleware'
 

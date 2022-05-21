@@ -9,8 +9,7 @@ export default function(jwtSecret: string) {
     };
 
     passport.use(new Strategy(opts, (userId: string, done: VerifiedCallback) => {
-        User.findOne({_id: userId})
-            .exec()
+        User.getUserById(userId)
             .then(user => done(null, user))
             .catch(err => done(err, null));
     }));

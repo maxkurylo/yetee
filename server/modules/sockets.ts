@@ -40,6 +40,7 @@ class WebSockets {
 
         this.io.use((socket: Socket, next: any) => {
             const authUserId = (socket.request as any).user;
+            // TODO: check user in database
             if (authUserId) {
                 next();
             } else {
