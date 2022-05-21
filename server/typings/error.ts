@@ -1,5 +1,6 @@
 
 export interface ErrorBody {
-    message: string,
-    details: any
+    message: string;
+    details?: any;
+    code?: number;
 }
