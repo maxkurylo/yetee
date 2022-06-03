@@ -1,4 +1,4 @@
-import User from '../models/user';
+import {addUser, getUserByExternalId} from '../models/user';
 import {Strategy, StrategyOption, Profile} from 'passport-facebook';
 import {VerifiedCallback} from 'passport-jwt';
 import passport from 'passport';
@@ -14,8 +14,7 @@ export default function(clientID: string, clientSecret: string, callbackURL: str
     };
 
     passport.use(new Strategy(opts, (accessToken: string, refreshToken: string, profile: Profile, done: VerifiedCallback) => {
-        User.findOne({ externalId: profile.id })
-            .exec()
+        getUserByExternalId(profile.id)
             .then(user => {
                 if (user) {
                     // user exists, log it in
@@ -28,7 +27,7 @@ export default function(clientID: string, clientSecret: string, callbackURL: str
                     externalId: profile.id,
                     isActive: true,
                 };
-                User.addUser(newUser)
+                addUser(newUser)
                     .then(createdUser => done(null, createdUser))
                     .catch(err => done(err, null));
             })

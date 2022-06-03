@@ -1,4 +1,4 @@
-import {Schema, model, UpdateWriteOpResult} from 'mongoose';
+import {Schema, model} from 'mongoose';
 import bcrypt from 'bcryptjs';
 import {IUser, IUserDocument, IUserModel} from "../typings/user";
 
@@ -20,35 +20,34 @@ const User = model<IUserDocument, IUserModel>('User', UserSchema);
 //  - delete user
 //  - edit user
 
-UserSchema.statics.getUserByEmail = async function(email: string): Promise<IUserDocument | null> {
-    return await this.findOne({ email }).exec();
-};
+function hashPassword(password: string): string {
+    return bcrypt.hashSync(password, 10);
+}
 
-UserSchema.statics.getUserById = async function(id: string): Promise<IUserDocument | null> {
-    return await this.findById(id).exec();
-};
+export function getUserByEmail(email: string, projection: any = {}): Promise<IUserDocument | null> {
+    return User.findOne({ email }, projection).exec();
+}
 
-UserSchema.statics.getAllUsers = async function(): Promise<IUserDocument[]> {
-    return await this.find({}).exec();
-};
+export function getUserById(id: string, projection: any = {}): Promise<IUserDocument | null> {
+    return User.findById(id, projection).exec();
+}
 
-UserSchema.statics.addUser = function(user: IUser): Promise<IUserDocument> {
+export function getUserByExternalId(externalId: string, projection: any = {}): Promise<IUserDocument | null> {
+    return User.findOne({ externalId }, projection).exec();
+}
+
+export function getAllUsers(projection: any = {}): Promise<IUserDocument[] | null> {
+    return User.find({}, projection).exec();
+}
+
+export function comparePassword(userPass: string, dbPass: string): Promise<boolean> {
+    return bcrypt.compare(userPass, dbPass);
+}
+
+export function addUser(user: IUser): Promise<IUserDocument> {
     const newUser = new User(user);
     if (newUser.password) {
         newUser.password = hashPassword(newUser.password);
     }
     return newUser.save();
-};
-
-
-UserSchema.methods.comparePassword = function(userPass: string, dbPass: string): boolean {
-    return bcrypt.compareSync(userPass, dbPass);
-};
-
-
-function hashPassword(password: string): string {
-    return bcrypt.hashSync(password, 10);
 }
-
-
-export default User;

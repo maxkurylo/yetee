@@ -40,7 +40,7 @@ export class UsersService {
     }
 
     fetchAllUsers(): Observable<any> {
-        return this.http.get('/api/everything/get-all-users').pipe(take(1));
+        return this.http.get('/api/users/get-all-users').pipe(take(1));
     }
 }
 

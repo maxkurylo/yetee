@@ -5,26 +5,32 @@ import {IGroup, IGroupDocument, IGroupModel} from "../typings/group";
 const GroupSchema = new Schema<IGroup>({
     name: { type: String, required: true },
     avatar: { type: String, required: false },
+}, {
+    toJSON: {
+        virtuals: true,
+        transform: function(doc, ret) { delete ret._id; }
+        },
+});
+
+GroupSchema.virtual('id').get(function (this: { _id: any }) {
+    return this._id.toHexString();
 });
 
 const Group = model<IGroupDocument, IGroupModel>('Groups', GroupSchema);
 
+export function getGroupById(id: string): Promise<IGroupDocument | null> {
+    return Group.findById(id).exec();
+}
 
-GroupSchema.statics.getGroupById = async function(id: string): Promise<IGroupDocument | null> {
-    return await this.findById(id).exec();
-};
+export function getAllGroups(projection: any = {}): Promise<IGroupDocument[] | null> {
+    return Group.find({}, projection).exec();
+}
 
-GroupSchema.statics.getAllGroups = async function(): Promise<IGroupDocument[]> {
-    return await this.find({}).exec();
-};
-
-GroupSchema.statics.addGroup = function(group: IGroup): Promise<IGroupDocument> {
+export function addGroup(group: IGroup): Promise<IGroupDocument> {
     const newGroup = new Group(group);
     return newGroup.save();
-};
+}
 
-GroupSchema.statics.removeGroupById = function(id: string): Promise<IGroupDocument> {
-    return this.deleteOne({_id: id});
-};
-
-export default Group
+export function removeGroupById(id: string): Promise<any> {
+    return Group.deleteOne({_id: id}).exec();
+}

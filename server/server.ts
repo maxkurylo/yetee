@@ -17,8 +17,10 @@ import enableSSLForProduction from './modules/ssl-for-production';
 import connectToMongo from './modules/mongo-connect';
 import setupAuth from './modules/auth';
 import WebSockets  from './modules/sockets';
+
 import AuthRoutes from './routes/auth';
 import GroupsRoutes from './routes/groups';
+import UsersRoutes from './routes/users';
 
 // constants
 const PORT = process.env.PORT || 5000;
@@ -59,6 +61,7 @@ WebSockets.init(server, passport);
 // API
 app.use("/api/auth", AuthRoutes);
 app.use("/api/groups", GroupsRoutes);
+app.use("/api/users", UsersRoutes);
 
 
 

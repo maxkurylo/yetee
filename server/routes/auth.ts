@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import User from '../models/user';
+import {addUser, comparePassword, getUserByEmail, getUserById} from '../models/user';
 import jwt, {SignOptions} from 'jsonwebtoken';
 import config from '../config';
 import passport, {AuthenticateOptions} from 'passport';
@@ -26,19 +26,25 @@ if (!JWT_SECRET) {
     throw 'App secret is missing! Add JWT_SECRET environment variable'
 }
 
-
-// Facebook strategy
-router.get('/facebook', passport.authenticate('facebook'));
-router.get('/facebook/callback', passport.authenticate('facebook', passportOptions), externalLogin);
-
-// Google strategy
-router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
-router.get('/google/callback', passport.authenticate('google', passportOptions), externalLogin);
+if (ENABLE_FACEBOOK_LOGIN) {
+    // Facebook strategy
+    router.get('/facebook', passport.authenticate('facebook'));
+    router.get('/facebook/callback', passport.authenticate('facebook', passportOptions), externalLogin);
+}
 
 
-// LinkedIn strategy
-router.get('/linkedin', passport.authenticate('linkedin'));
-router.get('/linkedin/callback', passport.authenticate('linkedin', passportOptions), externalLogin);
+if (ENABLE_GOOGLE_LOGIN) {
+    // Google strategy
+    router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+    router.get('/google/callback', passport.authenticate('google', passportOptions), externalLogin);
+}
+
+if (ENABLE_LINKEDIN_LOGIN) {
+    // LinkedIn strategy
+    router.get('/linkedin', passport.authenticate('linkedin'));
+    router.get('/linkedin/callback', passport.authenticate('linkedin', passportOptions), externalLogin);
+}
+
 
 
 /**
@@ -52,23 +58,33 @@ router.post('/login', (req: Request, res: Response) => {
         };
         return res.status(400).json(body);
     }
-    User.getUserByEmail(email)
+
+    getUserByEmail(email, {email: 1, password: 1, isActive: 1})
         .then(user => {
-            if (user && user.comparePassword(password, user.password || '')) {
-                if (!user.isActive) {
-                    const body: ErrorBody = {
-                        message: 'Email confirmation required',
-                    };
-                    return res.status(401).json(body);
-                }
-                const token = generateToken(user._id);
-                res.json({ token });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
             }
+            comparePassword(password, user.password || '')
+                .then(isMatch => {
+                    if (isMatch) {
+                        if (!user.isActive) {
+                            const body: ErrorBody = {
+                                message: 'Email confirmation required',
+                            };
+                            return res.status(401).json(body);
+                        }
+                        const token = generateToken(user._id.toString());
+                        res.json({ token });
+                    }
+                })
+                .catch(err => {
+                    return res.status(401).json({ details: err.toString() });
+                });
         })
         .catch(err => {
             const body: ErrorBody = {
                 message: 'Incorrect email or password',
-                details: err
+                details: err.toString()
             };
             res.status(401).json(body);
         });
@@ -89,13 +105,13 @@ router.post('/sign-up', (req: Request, res: Response) => {
         isActive: !config.emailVerificationNeeded,
     };
 
-    User.addUser(newUser)
+    addUser(newUser)
         .then(createdUser => {
             if (config.emailVerificationNeeded) {
                 // TODO: generate token for email confirmation
                 res.json({ message: 'User added. Email verification required'})
             } else {
-                const token = generateToken(createdUser._id);
+                const token = generateToken(createdUser._id.toString());
                 res.json({ token });
             }
         })
@@ -124,13 +140,13 @@ router.post('/verify_email', (req: Request, res: Response) => {
  */
 router.get('/me', jwtMiddleware, (req: Request, res: Response) => {
     const userId = (req.user as any)._id;
-    User.getUserById(userId)
+    getUserById(userId, {password: 0, __v: 0})
         .then((user) => {
             if (!user) {
                 const body: ErrorBody = { message: 'User not found' };
                 return res.status(404).json(body);
             }
-            res.status(200).json(user);
+            res.status(200).json(user.toJSON());
         })
         .catch(err => {
             const body: ErrorBody = {
@@ -166,7 +182,7 @@ function externalLogin(req: Request, res: Response) {
 
 function generateToken(userId: string): string {
     const opts: SignOptions = {
-        expiresIn: config.sessionExpireTime
+        expiresIn: process.env.SESSION_EXPIRE_TIME || '1d'
     };
-    return jwt.sign(userId, JWT_SECRET, opts);
+    return jwt.sign({ userId }, JWT_SECRET, opts);
 }

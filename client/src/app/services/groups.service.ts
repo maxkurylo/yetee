@@ -43,15 +43,15 @@ export class GroupsService {
     // BE requests
 
     fetchAllGroups(): Observable<any> {
-        return this.http.get('/api/everything/get-all-groups').pipe(take(1));
+        return this.http.get('/api/groups/get-all-groups').pipe(take(1));
     }
 
     createGroup(group: GroupCreation) {
-        return this.http.post('/api/everything/create-group', group);
+        return this.http.post('/api/groups/create-group', group);
     }
 
     alterPatricipants(participants: string[]) {
-        return this.http.put('/api/everything/alter-group-participants', participants);
+        return this.http.put('/api/groups/alter-group-participants', participants);
     }
 }
 

@@ -1,18 +1,20 @@
 import { Router, Request, Response } from 'express';
-import Group from '../models/group';
+import {addGroup, getAllGroups, removeGroupById} from '../models/group';
 import jwtMiddleware from '../passports/jwt-middleware'
 import {ErrorBody} from "../typings/error";
+import {IGroup} from "../typings/group";
 
 const router = Router();
 
 router.get('/get-all-groups', jwtMiddleware, (req: Request, res: Response) => {
-    Group.getAllGroups()
+    getAllGroups({id: 1, name: 1, avatar: 1})
         .then(groups => {
             if (!groups) {
                 const body: ErrorBody = { message: 'Groups not found' };
                 return res.status(404).json(body);
             }
-            res.status(200).json(groups);
+            const jsons = groups.map(gr => gr.toJSON());
+            res.status(200).json(jsons);
         })
         .catch(err => {
             const body: ErrorBody = {
@@ -24,19 +26,18 @@ router.get('/get-all-groups', jwtMiddleware, (req: Request, res: Response) => {
 });
 
 router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
-    const { name, avatarUrl, participants, companyId } = req.body;
+    const { name, avatar, participants } = req.body;
     if (!participants || participants.length < 1) {
         const body: ErrorBody = { message: 'Missing group participants' };
         return res.status(400).json(body);
     }
 
-    const newGroup = new Group({
+    const newGroup: IGroup = {
         name,
-        avatarUrl,
-        companyId
-    });
+        avatar,
+    };
 
-    Group.addGroup(newGroup)
+    addGroup(newGroup)
         .then(group => {
             res.status(200).json(group);
         })
@@ -52,7 +53,7 @@ router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
 
 router.post('/remove-group', jwtMiddleware, (req: Request, res: Response) => {
     const { id } = req.body;
-    Group.removeGroupById(id)
+    removeGroupById(id)
         .then(() => {
             res.status(200).send();
         })

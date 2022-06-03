@@ -24,10 +24,10 @@ class WebSockets {
         }
 
         this.io.on('connection', (socket: Socket) => {
-            const authUserId = (socket.request as any).user;
+            const user = (socket.request as any).user;
             // const { roomId } = socket.handshake.query;
-            if (authUserId) {
-                socket.join(authUserId);
+            if (user) {
+                socket.join(user._id.toString());
             }
             this.setupSocketEvents(socket);
         });
@@ -39,9 +39,8 @@ class WebSockets {
         this.io.use(wrap(passport.authenticate(['jwt'])));
 
         this.io.use((socket: Socket, next: any) => {
-            const authUserId = (socket.request as any).user;
-            // TODO: check user in database
-            if (authUserId) {
+            const user = (socket.request as any).user;
+            if (user) {
                 next();
             } else {
                 console.warn('Unauthorized socket connection attempt');
