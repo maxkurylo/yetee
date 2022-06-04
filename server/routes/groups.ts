@@ -7,7 +7,7 @@ import {IGroup} from "../typings/group";
 const router = Router();
 
 router.get('/get-all-groups', jwtMiddleware, (req: Request, res: Response) => {
-    getAllGroups({id: 1, name: 1, avatar: 1})
+    getAllGroups({name: 1, avatar: 1})
         .then(groups => {
             if (!groups) {
                 const body: ErrorBody = { message: 'Groups not found' };

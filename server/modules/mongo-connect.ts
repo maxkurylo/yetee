@@ -1,4 +1,4 @@
-import { connect } from 'mongoose';
+import { connect, plugin } from 'mongoose';
 
 
 const options = {
@@ -15,3 +15,14 @@ export default function(mongoUrl: string | undefined) {
         .catch(err => { throw err });
 }
 
+
+plugin((schema: any) => {
+    schema.options.toJSON = {
+        virtuals: true,
+        versionKey: false,
+        transform(doc: any, ret: any) {
+            ret.id = ret._id;
+            delete ret._id;
+        }
+    };
+});

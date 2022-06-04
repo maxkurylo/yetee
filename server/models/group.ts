@@ -5,15 +5,6 @@ import {IGroup, IGroupDocument, IGroupModel} from "../typings/group";
 const GroupSchema = new Schema<IGroup>({
     name: { type: String, required: true },
     avatar: { type: String, required: false },
-}, {
-    toJSON: {
-        virtuals: true,
-        transform: function(doc, ret) { delete ret._id; }
-        },
-});
-
-GroupSchema.virtual('id').get(function (this: { _id: any }) {
-    return this._id.toHexString();
 });
 
 const Group = model<IGroupDocument, IGroupModel>('Groups', GroupSchema);
