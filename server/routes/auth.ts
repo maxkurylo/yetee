@@ -10,7 +10,7 @@ import {IUser} from "../typings/user";
 const router = Router();
 
 const JWT_SECRET: string = process.env.JWT_SECRET || '';
-const EXTERNAL_LOGIN_REDIRECT_URL = process.env.REDIRECT_URL_AFTER_EXTERNAL_LOGIN;
+const APP_URL = process.env.APP_URL;
 
 const ENABLE_LINKEDIN_LOGIN = process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET;
 const ENABLE_GOOGLE_LOGIN = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET;
@@ -18,7 +18,7 @@ const ENABLE_FACEBOOK_LOGIN = process.env.FACEBOOK_CLIENT_ID && process.env.FACE
 
 const passportOptions: AuthenticateOptions = {
     session: false,
-    failureRedirect: EXTERNAL_LOGIN_REDIRECT_URL + '/login?failed=true'
+    failureRedirect: APP_URL + '/login?failed=true'
 };
 
 
@@ -35,7 +35,7 @@ if (ENABLE_FACEBOOK_LOGIN) {
 
 if (ENABLE_GOOGLE_LOGIN) {
     // Google strategy
-    router.get('/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+    router.get('/google', passport.authenticate('google', { scope: ['openid', 'email', 'profile'] }));
     router.get('/google/callback', passport.authenticate('google', passportOptions), externalLogin);
 }
 
@@ -95,13 +95,13 @@ router.post('/login', (req: Request, res: Response) => {
  * Sign up
  */
 router.post('/sign-up', (req: Request, res: Response) => {
-    const { name, email, password, avatar } = req.body;
+    const { name, email, password, avatarUrl } = req.body;
 
     const newUser: IUser = {
         name,
         email,
         password,
-        avatar,
+        avatarUrl,
         isActive: !config.emailVerificationNeeded,
     };
 
@@ -177,7 +177,7 @@ export default router;
 function externalLogin(req: Request, res: Response) {
     const userId = (req.user as any)._id;
     const token = generateToken(userId);
-    res.redirect(`${EXTERNAL_LOGIN_REDIRECT_URL}?token=${token}`);
+    res.redirect(`${APP_URL}?token=${token}`);
 }
 
 function generateToken(userId: string): string {

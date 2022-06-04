@@ -10,7 +10,7 @@ export default function(clientID: string, clientSecret: string, callbackURL: str
     const opts: IOAuth2StrategyOption = {
         clientID,
         clientSecret,
-        callbackURL,
+        callbackURL
     };
 
     passport.use(new OAuth2Strategy(opts, (accessToken: string, refreshToken: string, profile: Profile, done: VerifiedCallback) => {
@@ -25,7 +25,7 @@ export default function(clientID: string, clientSecret: string, callbackURL: str
                     name: profile.displayName,
                     email: profile.emails ? profile.emails[0].value : '',
                     externalId: profile.id,
-                    // avatar: profile._json.picture,
+                    avatarUrl: profile._json.picture,
                     isActive: true,
                 };
                 addUser(newUser)

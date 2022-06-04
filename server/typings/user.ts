@@ -5,7 +5,7 @@ export interface IUser {
     email: string;
     isActive?: boolean;
     password?: string;
-    avatar?: string;
+    avatarUrl?: string;
     externalId?: string;
     metadata?: any;
 }

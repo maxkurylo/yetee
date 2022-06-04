@@ -7,7 +7,7 @@ import {IGroup} from "../typings/group";
 const router = Router();
 
 router.get('/get-all-groups', jwtMiddleware, (req: Request, res: Response) => {
-    getAllGroups({name: 1, avatar: 1})
+    getAllGroups({name: 1, avatarUrl: 1})
         .then(groups => {
             if (!groups) {
                 const body: ErrorBody = { message: 'Groups not found' };
@@ -26,7 +26,7 @@ router.get('/get-all-groups', jwtMiddleware, (req: Request, res: Response) => {
 });
 
 router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
-    const { name, avatar, participants } = req.body;
+    const { name, avatarUrl, participants } = req.body;
     if (!participants || participants.length < 1) {
         const body: ErrorBody = { message: 'Missing group participants' };
         return res.status(400).json(body);
@@ -34,7 +34,7 @@ router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
 
     const newGroup: IGroup = {
         name,
-        avatar,
+        avatarUrl,
     };
 
     addGroup(newGroup)

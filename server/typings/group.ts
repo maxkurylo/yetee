@@ -2,7 +2,7 @@ import {Document, Model} from 'mongoose';
 
 export interface IGroup {
     name: string;
-    avatar?: string;
+    avatarUrl?: string;
 }
 
 export interface IGroupDocument extends IGroup, Document {

@@ -25,6 +25,7 @@ export default function(clientID: string, clientSecret: string, callbackURL: str
                     name: profile.displayName,
                     externalId: profile.id,
                     email: profile.emails[0].value,
+                    avatarUrl: profile.photos[0].value,
                     isActive: true,
                 };
                 addUser(newUser)

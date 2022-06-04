@@ -4,7 +4,7 @@ import {IGroup, IGroupDocument, IGroupModel} from "../typings/group";
 
 const GroupSchema = new Schema<IGroup>({
     name: { type: String, required: true },
-    avatar: { type: String, required: false },
+    avatarUrl: { type: String, required: false },
 });
 
 const Group = model<IGroupDocument, IGroupModel>('Groups', GroupSchema);

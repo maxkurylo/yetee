@@ -9,7 +9,7 @@ router.get('/get-all-users', jwtMiddleware, (req: Request, res: Response) => {
     const projection = {
         email: 1,
         name: 1,
-        avatar: 1,
+        avatarUrl: 1,
     };
     getAllUsers(projection)
         .then(users => {

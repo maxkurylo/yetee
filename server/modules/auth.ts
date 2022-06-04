@@ -5,9 +5,7 @@ import FacebookAuth from '../passports/facebook';
 import { hostname } from "os";
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const APP_URL = hostname();
-
-console.log('HOSTNAME:', APP_URL);
+const APP_URL = process.env.APP_URL;
 
 const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;

@@ -8,7 +8,7 @@ const UserSchema = new Schema<IUserModel>({
     name:       { type: String, required: true },
     isActive:   { type: Boolean, required: true, default: false },
     password:   { type: String, required: false },
-    avatar:     { type: String, required: false },
+    avatarUrl:  { type: String, required: false },
     externalId: { type: String, required: false },
     metadata:   { type: Schema.Types.Mixed, required: false },
 });
