@@ -44,18 +44,14 @@ export class InitService {
     initImportantData(): Promise<void> {
         return Promise.all([
             this.cu.fetchMyUserInfo().toPromise(),
-            this.companiesService.fetchAllCompanies().toPromise(),
             this.us.fetchAllUsers().toPromise(),
             this.gs.fetchAllGroups().toPromise(),
             this.socketsService.init(),
         ])
-            .then(([currentUser, companies, users, groups, _]) => {
+            .then(([currentUser, users, groups, _]) => {
                 this.cu.user = currentUser;
                 this.us.allUsers = users;
                 this.gs.allGroups = groups;
-                this.companiesService.allCompanies = companies;
-                const selectedCompanyId = localStorage.getItem('selectedCompanyId');
-                this.companiesService.selectedCompany = companies.find((c: Company) => c?.id === selectedCompanyId) || companies[0];
                 return Promise.resolve();
             })
     }

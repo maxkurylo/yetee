@@ -13,10 +13,9 @@ export class WebsocketsService {
     init(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.socket = io({
-                path: '/socket',
                 extraHeaders: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
-                }
+                },
             });
 
             this.socket.on("connect_error", (err: any) => {

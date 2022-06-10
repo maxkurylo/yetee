@@ -1,5 +1,4 @@
-module.exports = {
-    sessionExpireTime: 3600 * 24, // one day,
+export default {
     emailVerificationNeeded: false,
 
     // permissions for roles
