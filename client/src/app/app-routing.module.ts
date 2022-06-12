@@ -30,7 +30,11 @@ const routes: Routes = [
         canActivate: [NotLoggedGuardService],
         loadChildren: () => import('./pages/sign-up/sign-up.module').then(m => m.SignUpModule),
     },
-    { path: '**', redirectTo: '' }
+    {
+        path: 'not-found',
+        loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundModule),
+    },
+    { path: '**', redirectTo: '/not-found' },
 ];
 
 @NgModule({
