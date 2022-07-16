@@ -14,7 +14,7 @@ export function getGroupById(id: string): Promise<IGroupDocument | null> {
 }
 
 export function getAllGroups(projection: any = {}): Promise<IGroupDocument[] | null> {
-    return Group.find({}, projection).exec();
+    return Group.find({ }, projection).exec();
 }
 
 export function addGroup(group: IGroup): Promise<IGroupDocument> {
@@ -23,5 +23,5 @@ export function addGroup(group: IGroup): Promise<IGroupDocument> {
 }
 
 export function removeGroupById(id: string): Promise<any> {
-    return Group.deleteOne({_id: id}).exec();
+    return Group.deleteOne({ _id: id }).exec();
 }

@@ -102,12 +102,12 @@ router.post('/sign-up', (req: Request, res: Response) => {
         email,
         password,
         avatarUrl,
-        isActive: !config.emailVerificationNeeded,
+        isActive: !config.emailVerificationRequired,
     };
 
     addUser(newUser)
         .then(createdUser => {
-            if (config.emailVerificationNeeded) {
+            if (config.emailVerificationRequired) {
                 // TODO: generate token for email confirmation
                 res.json({ message: 'User added. Email verification required'})
             } else {
