@@ -10,29 +10,29 @@ const UserAuthoritiesSchema = new Schema<IResourceAuthorities>({
 
 const UserAuthorities = model<IResourceAuthoritiesDocument, IResourceAuthoritiesModel>('Authorities', UserAuthoritiesSchema);
 
-export function getAuthoritiesByUserId (userId: string): Promise<IResourceAuthoritiesDocument[]> {
+export function getAuthoritiesByUserId(userId: string): Promise<IResourceAuthoritiesDocument[]> {
     return UserAuthorities.find({ userId }).exec();
 }
-export function getAuthoritiesByResourceId (resourceId: string): Promise<IResourceAuthoritiesDocument[]> {
+export function getAuthoritiesByResourceId(resourceId: string): Promise<IResourceAuthoritiesDocument[]> {
     return UserAuthorities.find({ resourceId }).exec();
 }
 
-export function getAuthoritiesByResourceAndUserId (resourceId: string, userId: string): Promise<IResourceAuthoritiesDocument[]> {
+export function getAuthoritiesByResourceAndUserId(resourceId: string, userId: string): Promise<IResourceAuthoritiesDocument[]> {
     return UserAuthorities.find({ resourceId, userId }).exec();
 }
 
-export function addUserAuthorities (auths: IResourceAuthorities[]): Promise<IResourceAuthoritiesDocument[]> {
+export function addUserAuthorities(auths: IResourceAuthorities[]): Promise<IResourceAuthoritiesDocument[]> {
     return UserAuthorities.insertMany(auths);
 }
 
-export function removeResourceAuthoritiesForUser (resourceId: string, userId: string): Promise<any> {
+export function removeResourceAuthoritiesForUser(resourceId: string, userId: string): Promise<any> {
     return UserAuthorities.deleteMany({ userId, resourceId }).exec();
 }
 
-export function removeAllAuthoritiesForUser (userId: string): Promise<any> {
+export function removeAllAuthoritiesForUser(userId: string): Promise<any> {
     return UserAuthorities.deleteMany({ userId }).exec();
 }
 
-export function removeAllAuthoritiesForResource (resourceId: string): Promise<any> {
+export function removeAllAuthoritiesForResource(resourceId: string): Promise<any> {
     return UserAuthorities.deleteMany({ resourceId }).exec();
 }

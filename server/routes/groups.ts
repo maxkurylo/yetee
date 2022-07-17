@@ -1,12 +1,17 @@
 import { Router, Request, Response } from 'express';
 import {addGroup, getAllGroups, removeGroupById} from '../models/group';
-import jwtMiddleware from '../passports/jwt-middleware'
+import {addUserAuthorities} from '../models/authorities';
+import jwtMiddleware from '../middlewares/jwt-middleware';
+import permissionsMiddleware from '../middlewares/permissions-middleware';
 import {ErrorBody} from "../typings/error";
 import {IGroup} from "../typings/group";
+import {IResourceAuthorities} from "../typings/authorities";
 
 const router = Router();
 
-router.get('/get-all-groups', jwtMiddleware, (req: Request, res: Response) => {
+const GROUP_MEMBER_ROLE = 'GROUP_MEMBER_ROLE';
+
+router.get('/get-all-groups', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     getAllGroups({name: 1, avatarUrl: 1})
         .then(groups => {
             if (!groups) {
@@ -25,6 +30,7 @@ router.get('/get-all-groups', jwtMiddleware, (req: Request, res: Response) => {
         });
 });
 
+
 router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
     const { name, avatarUrl, participants } = req.body;
     if (!participants || participants.length < 1) {
@@ -39,7 +45,22 @@ router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
 
     addGroup(newGroup)
         .then(group => {
-            res.status(200).json(group);
+            const newAuths: IResourceAuthorities[] = participants.map((uId: string) => {
+                return {
+                    resourceId: group.id,
+                    userId: uId,
+                    role: GROUP_MEMBER_ROLE,
+                }
+            })
+            addUserAuthorities(newAuths)
+                .then(() => res.status(200).json(group))
+                .catch(err => {
+                    const body: ErrorBody = {
+                        message: 'Failed to add authorities to group',
+                        details: err
+                    };
+                    return res.status(500).json(body);
+                })
         })
         .catch(err => {
             const body: ErrorBody = {
@@ -51,7 +72,7 @@ router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
 });
 
 
-router.post('/remove-group', jwtMiddleware, (req: Request, res: Response) => {
+router.post('/remove-group', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     const { id } = req.body;
     removeGroupById(id)
         .then(() => {
@@ -67,12 +88,12 @@ router.post('/remove-group', jwtMiddleware, (req: Request, res: Response) => {
 });
 
 
-router.put("/add-group-member", jwtMiddleware, (req: Request, res: Response) => {
+router.put("/add-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     res.status(200).send();
 });
 
 
-router.put("/remove-group-member", jwtMiddleware, (req: Request, res: Response) => {
+router.put("/remove-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     res.status(200).send();
 });
 

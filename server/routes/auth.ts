@@ -4,7 +4,7 @@ import jwt, {SignOptions} from 'jsonwebtoken';
 import config from '../config';
 import passport, {AuthenticateOptions} from 'passport';
 import {ErrorBody} from "../typings/error";
-import jwtMiddleware from '../passports/jwt-middleware'
+import jwtMiddleware from '../middlewares/jwt-middleware'
 import {IUser} from "../typings/user";
 
 const router = Router();
