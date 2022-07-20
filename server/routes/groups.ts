@@ -23,7 +23,7 @@ const GROUP_MEMBER_ROLE = config.groupMemberRole;
  * @returns:
  *      groups: IGroup[]
  */
-router.get('/get-my-groups', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
+router.get('/my-groups', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     const userAuths: IUserAuthorities[] = (req as any).authorities;
     const groupIds = new Set<string>();
     userAuths.forEach(a => a.resourceId && groupIds.add(a.resourceId));
@@ -121,7 +121,7 @@ router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
  *     resourceId: string
  * @returns void
  */
-router.post('/remove-group', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
+router.delete('/remove-group', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     const { resourceId } = req.body;
     Promise.all([
         removeGroupById(resourceId),
@@ -145,7 +145,7 @@ router.post('/remove-group', jwtMiddleware, permissionsMiddleware, (req: Request
  *     role: string
  * @returns void
  */
-router.put("/add-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
+router.post("/add-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     const { resourceId, userId, role } = req.body;
     if (!resourceId || !userId || !role) {
         const errorBody: ErrorBody = { message: 'resourceId, userId or role is missing' };
@@ -176,7 +176,7 @@ router.put("/add-group-member", jwtMiddleware, permissionsMiddleware, (req: Requ
  *     userId: string
  * @returns void
  */
-router.put("/remove-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
+router.delete("/remove-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     const { resourceId, userId } = req.body;
     if (!resourceId || !userId) {
         const errorBody: ErrorBody = { message: 'resourceId or userId is missing' };
