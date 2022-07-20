@@ -20,6 +20,7 @@ export interface IResourceAuthoritiesDocument extends IResourceAuthorities, Docu
 export interface IResourceAuthoritiesModel extends Model<IResourceAuthoritiesDocument>{
     getAuthoritiesByUserId: (userId: string) => Promise<IResourceAuthoritiesDocument[]>;
     getAuthoritiesByResourceId: (resourceId: string) => Promise<IResourceAuthoritiesDocument[]>;
+    getAuthoritiesByResourceIds: (resourceIds: Set<string>) => Promise<IResourceAuthoritiesDocument[]>
     getAuthoritiesByResourceAndUserId: (resourceId: string, userId: string) => Promise<IResourceAuthoritiesDocument[]>;
     addUserAuthorities: (auths: IResourceAuthorities[]) => Promise<IResourceAuthoritiesDocument>;
     removeResourceAuthoritiesForUser: (resourceId: string, userId: string) => Promise<any>;

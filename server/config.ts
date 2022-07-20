@@ -1,5 +1,7 @@
 export default {
     emailVerificationRequired: false,
+    groupMemberRole: 'GROUP_MEMBER_ROLE',
+    groupAdminRole: 'GROUP_ADMIN_ROLE',
     permissions: [
         'GLOBAL_ADMIN',
         'CREATE_POSTS',

@@ -13,8 +13,8 @@ export function getGroupById(id: string): Promise<IGroupDocument | null> {
     return Group.findById(id).exec();
 }
 
-export function getAllGroups(projection: any = {}): Promise<IGroupDocument[] | null> {
-    return Group.find({ }, projection).exec();
+export function getGroupsByIds(groupIds: Set<string>, projection: any = {}): Promise<IGroupDocument[]> {
+    return Group.find({ _id: groupIds }, projection).exec();
 }
 
 export function addGroup(group: IGroup): Promise<IGroupDocument> {

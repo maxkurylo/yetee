@@ -1,36 +1,75 @@
 import { Router, Request, Response } from 'express';
-import {addGroup, getAllGroups, removeGroupById} from '../models/group';
-import {addUserAuthorities} from '../models/authorities';
+import {addGroup, getGroupsByIds, removeGroupById} from '../models/group';
+import {
+    addUserAuthorities,
+    getAuthoritiesByResourceIds,
+    removeAllAuthoritiesForResource,
+    removeResourceAuthoritiesForUser
+} from '../models/authorities';
 import jwtMiddleware from '../middlewares/jwt-middleware';
 import permissionsMiddleware from '../middlewares/permissions-middleware';
 import {ErrorBody} from "../typings/error";
 import {IGroup} from "../typings/group";
-import {IResourceAuthorities} from "../typings/authorities";
+import {IResourceAuthorities, IUserAuthorities} from "../typings/authorities";
+import config from "../config";
 
 const router = Router();
 
-const GROUP_MEMBER_ROLE = 'GROUP_MEMBER_ROLE';
+const GROUP_MEMBER_ROLE = config.groupMemberRole;
 
-router.get('/get-all-groups', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
-    getAllGroups({name: 1, avatarUrl: 1})
-        .then(groups => {
-            if (!groups) {
-                const body: ErrorBody = { message: 'Groups not found' };
-                return res.status(404).json(body);
-            }
-            const jsons = groups.map(gr => gr.toJSON());
-            res.status(200).json(jsons);
+
+/**
+ * Get all groups according to user authorities
+ * @returns:
+ *      groups: IGroup[]
+ */
+router.get('/get-my-groups', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
+    const userAuths: IUserAuthorities[] = (req as any).authorities;
+    const groupIds = new Set<string>();
+    userAuths.forEach(a => a.resourceId && groupIds.add(a.resourceId));
+
+    // we get all user groups and all authorities for that groups
+    // It is necessary to give client groups together with their participants
+    Promise.all([
+        getGroupsByIds(groupIds,{ name: 1, avatarUrl: 1 }),
+        getAuthoritiesByResourceIds(groupIds)
+    ])
+        .then(([groups, auths]) => {
+            const participantsMap: any = {}
+            auths.forEach(a => {
+                if (a.resourceId) {
+                    if (!participantsMap[a.resourceId]) {
+                        participantsMap[a.resourceId] = new Set<string>();
+                    }
+                    participantsMap.add(a.userId);
+                }
+            });
+            const jsonGroups: IGroup[] = groups.map(g => {
+                const jg: IGroup = g.toJSON();
+                jg.participants = participantsMap[g.id] || [];
+                return jg;
+            });
+            res.status(200).json(jsonGroups);
         })
         .catch(err => {
-            const body: ErrorBody = {
+            const errorBody: ErrorBody = {
                 message: 'Failed to get groups',
                 details: err
             };
-            return res.status(500).json(body);
+            res.status(500).json(errorBody);
         });
 });
 
 
+/**
+ * Create new group
+ * @params:
+ *     name: string
+ *     avatarUrl: string
+ *     participants: string[] - ids of users
+ * @returns
+ *     group: IGroup
+ */
 router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
     const { name, avatarUrl, participants } = req.body;
     if (!participants || participants.length < 1) {
@@ -53,48 +92,105 @@ router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
                 }
             })
             addUserAuthorities(newAuths)
-                .then(() => res.status(200).json(group))
+                .then(() => {
+                    const jsonGroup: IGroup = group.toJSON();
+                    jsonGroup.participants = participants;
+                    res.status(200).json(jsonGroup)
+                })
                 .catch(err => {
-                    const body: ErrorBody = {
+                    const errorBody: ErrorBody = {
                         message: 'Failed to add authorities to group',
                         details: err
                     };
-                    return res.status(500).json(body);
-                })
+                    res.status(500).json(errorBody);
+                });
         })
         .catch(err => {
-            const body: ErrorBody = {
+            const errorBody: ErrorBody = {
                 message: 'Failed to create group',
                 details: err
             };
-            return res.status(500).json(body);
+            res.status(500).json(errorBody);
         });
 });
 
 
+/**
+ * Remove group and all authorities related to it
+ * @params
+ *     resourceId: string
+ * @returns void
+ */
 router.post('/remove-group', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
-    const { id } = req.body;
-    removeGroupById(id)
-        .then(() => {
-            res.status(200).send();
-        })
+    const { resourceId } = req.body;
+    Promise.all([
+        removeGroupById(resourceId),
+        removeAllAuthoritiesForResource(resourceId)
+    ])
+        .then(() => res.status(200).send())
         .catch(err => {
-            const body: ErrorBody = {
+            const errorBody: ErrorBody = {
                 message: 'Failed to remove group',
                 details: err
             };
-            return res.status(500).json(body);
+            res.status(500).json(errorBody);
         });
 });
 
 
+/**
+ * @params:
+ *     resourceId: string
+ *     userId: string
+ *     role: string
+ * @returns void
+ */
 router.put("/add-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
-    res.status(200).send();
+    const { resourceId, userId, role } = req.body;
+    if (!resourceId || !userId || !role) {
+        const errorBody: ErrorBody = { message: 'resourceId, userId or role is missing' };
+        return res.status(400).send(errorBody);
+    }
+    const auths: IResourceAuthorities[] = [
+        {
+            resourceId,
+            userId,
+            role,
+        }
+    ]
+    addUserAuthorities(auths)
+        .then(() => res.status(200).send())
+        .catch(err => {
+            const errorBody: ErrorBody = {
+                message: 'Failed to add user to group',
+                details: err
+            };
+            res.status(500).json(errorBody);
+        });
 });
 
 
+/**
+ * @params:
+ *     resourceId: string
+ *     userId: string
+ * @returns void
+ */
 router.put("/remove-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
-    res.status(200).send();
+    const { resourceId, userId } = req.body;
+    if (!resourceId || !userId) {
+        const errorBody: ErrorBody = { message: 'resourceId or userId is missing' };
+        return res.status(400).send(errorBody);
+    }
+    removeResourceAuthoritiesForUser(resourceId, userId)
+        .then(() => res.status(200).send())
+        .catch(err => {
+            const errorBody: ErrorBody = {
+                message: 'Failed to remove user from group',
+                details: err
+            };
+            res.status(500).json(errorBody);
+        });
 });
 
 export default router;

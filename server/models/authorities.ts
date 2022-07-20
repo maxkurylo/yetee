@@ -13,8 +13,13 @@ const UserAuthorities = model<IResourceAuthoritiesDocument, IResourceAuthorities
 export function getAuthoritiesByUserId(userId: string): Promise<IResourceAuthoritiesDocument[]> {
     return UserAuthorities.find({ userId }).exec();
 }
+
 export function getAuthoritiesByResourceId(resourceId: string): Promise<IResourceAuthoritiesDocument[]> {
     return UserAuthorities.find({ resourceId }).exec();
+}
+
+export function getAuthoritiesByResourceIds(resourceIds: Set<string>): Promise<IResourceAuthoritiesDocument[]> {
+    return UserAuthorities.find({ resourceId: resourceIds as any }).exec();
 }
 
 export function getAuthoritiesByResourceAndUserId(resourceId: string, userId: string): Promise<IResourceAuthoritiesDocument[]> {
