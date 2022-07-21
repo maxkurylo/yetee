@@ -10,14 +10,23 @@ import {makeObjectReadonly} from "./init.service";
 })
 export class CurrentUserService {
     private _user: User = { id: '', name: ''};
-    set user(currentUser: User ) { this._user = makeObjectReadonly(currentUser) }
-    get user() { return this._user; }
+    private _authorities: any[] = [];
+
+    public set user(currentUser: User ) { this._user = makeObjectReadonly(currentUser) }
+    public get user() { return this._user; }
+
+    public set authorities(auths: any[] ) { this._authorities = auths }
+    public get authorities() { return this._authorities; }
 
     constructor(private http: HttpClient) {
     }
 
     // app initializer
-    fetchMyUserInfo(): Observable<any> {
+    public fetchMyUserInfo(): Observable<any> {
         return this.http.get('/api/auth/me').pipe(take(1));
+    }
+
+    public fetchMyAuthorities(): Observable<any> {
+        return this.http.get('/api/auth/my-authorities').pipe(take(1));
     }
 }

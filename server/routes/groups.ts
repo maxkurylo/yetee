@@ -17,6 +17,7 @@ import hasPermission from '../helpers/has-permission';
 const router = Router();
 
 const GROUP_MEMBER_ROLE = config.groupMemberRole;
+const GROUP_ADMIN_ROLE = config.groupAdminRole;
 
 
 /**
@@ -42,12 +43,12 @@ router.get('/my-groups', jwtMiddleware, permissionsMiddleware, (req: Request, re
                     if (!participantsMap[a.resourceId]) {
                         participantsMap[a.resourceId] = new Set<string>();
                     }
-                    participantsMap.add(a.userId);
+                    participantsMap[a.resourceId].add(a.userId);
                 }
             });
             const jsonGroups: IGroup[] = groups.map(g => {
                 const jg: IGroup = g.toJSON();
-                jg.participants = participantsMap[g.id] || [];
+                jg.participants = Array.from(participantsMap[g.id] || []);
                 return jg;
             });
             res.status(200).json(jsonGroups);
@@ -72,6 +73,7 @@ router.get('/my-groups', jwtMiddleware, permissionsMiddleware, (req: Request, re
  *     group: IGroup
  */
 router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
+    const userId = (req.user as any).id;
     const { name, avatarUrl, participants } = req.body;
     if (!participants || participants.length < 1) {
         const body: ErrorBody = { message: 'Missing group participants' };
@@ -92,6 +94,12 @@ router.post('/create-group', jwtMiddleware, (req: Request, res: Response) => {
                     role: GROUP_MEMBER_ROLE,
                 }
             })
+            // assign admin role to group creator
+            newAuths.push({
+                resourceId: group.id,
+                userId,
+                role: GROUP_ADMIN_ROLE,
+            });
             addUserAuthorities(newAuths)
                 .then(() => {
                     const jsonGroup: IGroup = group.toJSON();

@@ -39,8 +39,8 @@ export default (req: Request, res: Response, next: any) => {
             const userAuths: IUserAuthorities[] = auths.map((a: IResourceAuthoritiesDocument) => {
                 const role = roles.find((r: IRoleDocument) => r.name === a.role);
                 return {
-                    ...a,
-                    permissions: role?.permissions,
+                    ...a.toJSON(),
+                    permissions: role?.permissions || [],
                 }
             });
             (req as any).authorities = userAuths;

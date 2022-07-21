@@ -29,7 +29,7 @@ export class CreateGroupDialogComponent implements OnInit, OnDestroy {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     availableUsers: User[] = [];
-    participants: Set<string> = new Set<string>(this.cu.user.id);
+    participants: Set<string> = new Set<string>([this.cu.user.id]);
 
     groupCreationForm = new FormGroup({
         name: new FormControl('', [Validators.required]),
@@ -62,7 +62,7 @@ export class CreateGroupDialogComponent implements OnInit, OnDestroy {
     createGroup() {
         const group: GroupCreation = {
             name: this.groupCreationForm.controls.name.value,
-            participants: this.participants,
+            participants: Array.from(this.participants),
             companyId: this.companiesService.selectedCompany?.id,
         };
         this.gs.createGroup(group).pipe(take(1)).subscribe(res => {

@@ -44,12 +44,14 @@ export class InitService {
     initImportantData(): Promise<void> {
         return Promise.all([
             this.cu.fetchMyUserInfo().toPromise(),
+            this.cu.fetchMyAuthorities().toPromise(),
             this.us.fetchAllUsers().toPromise(),
             this.gs.fetchAllGroups().toPromise(),
             this.socketsService.init(),
         ])
-            .then(([currentUser, users, groups]) => {
+            .then(([currentUser, auths, users, groups]) => {
                 this.cu.user = currentUser;
+                this.cu.authorities = auths;
                 this.us.allUsers = users;
                 this.gs.allGroups = groups;
                 return Promise.resolve();

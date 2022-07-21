@@ -58,7 +58,7 @@ export class GroupsService {
 export interface GroupCreation {
     name: string;
     avatarUrl?: string;
-    participants?: Set<string>;
+    participants?: Array<string>;
     companyId?: string;
 }
 
