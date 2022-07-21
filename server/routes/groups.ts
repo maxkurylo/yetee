@@ -12,6 +12,7 @@ import {ErrorBody} from "../typings/error";
 import {IGroup} from "../typings/group";
 import {IResourceAuthorities, IUserAuthorities} from "../typings/authorities";
 import config from "../config";
+import hasPermission from '../helpers/has-permission';
 
 const router = Router();
 
@@ -147,10 +148,18 @@ router.delete('/remove-group', jwtMiddleware, permissionsMiddleware, (req: Reque
  */
 router.post("/add-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     const { resourceId, userId, role } = req.body;
+    const userAuthorities = (req as any).authorities;
+
     if (!resourceId || !userId || !role) {
         const errorBody: ErrorBody = { message: 'resourceId, userId or role is missing' };
         return res.status(400).send(errorBody);
     }
+
+    if (!hasPermission(userAuthorities, resourceId, 'EDIT_MEMBERS')) {
+        const errorBody: ErrorBody = { message: 'No permissions to delete user from group' };
+        return res.status(403).send(errorBody);
+    }
+
     const auths: IResourceAuthorities[] = [
         {
             resourceId,
@@ -178,10 +187,18 @@ router.post("/add-group-member", jwtMiddleware, permissionsMiddleware, (req: Req
  */
 router.delete("/remove-group-member", jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
     const { resourceId, userId } = req.body;
+    const auths = (req as any).authorities;
+
     if (!resourceId || !userId) {
         const errorBody: ErrorBody = { message: 'resourceId or userId is missing' };
         return res.status(400).send(errorBody);
     }
+
+    if (!hasPermission(auths, resourceId, 'EDIT_MEMBERS')) {
+        const errorBody: ErrorBody = { message: 'No permissions to delete user from group' };
+        return res.status(403).send(errorBody);
+    }
+
     removeResourceAuthoritiesForUser(resourceId, userId)
         .then(() => res.status(200).send())
         .catch(err => {

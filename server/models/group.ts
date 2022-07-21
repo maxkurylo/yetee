@@ -14,7 +14,7 @@ export function getGroupById(id: string): Promise<IGroupDocument | null> {
 }
 
 export function getGroupsByIds(groupIds: Set<string>, projection: any = {}): Promise<IGroupDocument[]> {
-    return Group.find({ _id: groupIds }, projection).exec();
+    return Group.find({ _id: { $in: Array.from(groupIds) } }, projection).exec();
 }
 
 export function addGroup(group: IGroup): Promise<IGroupDocument> {

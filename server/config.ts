@@ -9,5 +9,7 @@ export default {
         'START_CALLS',
         'EDIT_MEMBERS',
         'WRITE_CHAT_MESSAGES',
+        'EDIT_GROUP',
+        'REMOVE_GROUP',
     ],
 };
