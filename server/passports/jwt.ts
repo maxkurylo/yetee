@@ -9,10 +9,10 @@ export default function(jwtSecret: string) {
     };
 
     passport.use(new Strategy(opts, (payload: any, done: VerifiedCallback) => {
-        getUserById(payload.userId)
+        getUserById(payload.userId, { password: 0 })
             .then(user => {
                 if (user) {
-                    return done(null, user)
+                    return done(null, user.toJSON())
                 }
                 done({ error: 'User not found' }, null)
             })

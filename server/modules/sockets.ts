@@ -27,7 +27,7 @@ class WebSockets {
             const user = (socket.request as any).user;
             // const { roomId } = socket.handshake.query;
             if (user) {
-                socket.join(user._id.toString());
+                socket.join(user.id);
             }
             this.setupSocketEvents(socket);
         });

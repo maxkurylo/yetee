@@ -33,7 +33,7 @@ export class InitService {
                     // logout user if something is wrong with important info
                     console.error(err);
                     this.authService.logout();
-                    window.location.assign('/login');
+                    // window.location.assign('/login');
                 });
         } else {
             return Promise.resolve();
@@ -46,7 +46,7 @@ export class InitService {
             this.cu.fetchMyUserInfo().toPromise(),
             this.us.fetchAllUsers().toPromise(),
             this.gs.fetchAllGroups().toPromise(),
-            // this.socketsService.init(),
+            this.socketsService.init(),
         ])
             .then(([currentUser, users, groups]) => {
                 this.cu.user = currentUser;

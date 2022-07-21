@@ -20,7 +20,7 @@ import {IRoleDocument} from "../typings/role";
  * If userId is not specified respond 400
  */
 export default (req: Request, res: Response, next: any) => {
-    const userId = (req.user as any)._id;
+    const userId = (req.user as any).id;
     const resourceId = (req as any).resourceId || req.body.resourceId || req.query.resourceId;
 
     if (!userId) {

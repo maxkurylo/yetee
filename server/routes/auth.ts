@@ -142,7 +142,7 @@ router.post('/verify_email', (req: Request, res: Response) => {
  * Get information about user
  */
 router.get('/me', jwtMiddleware, (req: Request, res: Response) => {
-    const userId = (req.user as any)._id;
+    const userId = (req.user as any).id;
     getUserById(userId, {password: 0, __v: 0})
         .then((user) => {
             if (!user) {
@@ -162,7 +162,7 @@ router.get('/me', jwtMiddleware, (req: Request, res: Response) => {
 
 
 router.get('/my-authorities', jwtMiddleware, (req: Request, res: Response) => {
-    const userId = (req.user as any)._id;
+    const userId = (req.user as any).id;
     Promise.all([
         getAllRoles(),
         getAuthoritiesByUserId(userId)
@@ -200,7 +200,7 @@ export default router;
 
 
 function externalLogin(req: Request, res: Response) {
-    const userId = (req.user as any)._id;
+    const userId = (req.user as any).id;
     const token = generateToken(userId);
     res.redirect(`${APP_URL}?token=${token}`);
 }
