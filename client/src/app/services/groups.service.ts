@@ -43,7 +43,7 @@ export class GroupsService {
     // BE requests
 
     fetchAllGroups(): Observable<any> {
-        return this.http.get('/api/groups/get-all-groups').pipe(take(1));
+        return this.http.get('/api/groups/my-groups').pipe(take(1));
     }
 
     createGroup(group: GroupCreation) {
@@ -58,7 +58,7 @@ export class GroupsService {
 export interface GroupCreation {
     name: string;
     avatarUrl?: string;
-    participants?: Set<string>;
+    participants?: Array<string>;
     companyId?: string;
 }
 

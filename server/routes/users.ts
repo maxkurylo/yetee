@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import jwtMiddleware from '../passports/jwt-middleware'
+import jwtMiddleware from '../middlewares/jwt-middleware'
 import {ErrorBody} from "../typings/error";
 import { getAllUsers } from "../models/user";
 

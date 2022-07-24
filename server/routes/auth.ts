@@ -4,8 +4,12 @@ import jwt, {SignOptions} from 'jsonwebtoken';
 import config from '../config';
 import passport, {AuthenticateOptions} from 'passport';
 import {ErrorBody} from "../typings/error";
-import jwtMiddleware from '../passports/jwt-middleware'
+import jwtMiddleware from '../middlewares/jwt-middleware'
 import {IUser} from "../typings/user";
+import {getAllRoles} from "../models/role";
+import {getAuthoritiesByUserId} from "../models/authorities";
+import {IUserAuthorities} from "../typings/authorities";
+import permissionsMiddleware from "../middlewares/permissions-middleware";
 
 const router = Router();
 
@@ -102,12 +106,12 @@ router.post('/sign-up', (req: Request, res: Response) => {
         email,
         password,
         avatarUrl,
-        isActive: !config.emailVerificationNeeded,
+        isActive: !config.emailVerificationRequired,
     };
 
     addUser(newUser)
         .then(createdUser => {
-            if (config.emailVerificationNeeded) {
+            if (config.emailVerificationRequired) {
                 // TODO: generate token for email confirmation
                 res.json({ message: 'User added. Email verification required'})
             } else {
@@ -139,7 +143,7 @@ router.post('/verify_email', (req: Request, res: Response) => {
  * Get information about user
  */
 router.get('/me', jwtMiddleware, (req: Request, res: Response) => {
-    const userId = (req.user as any)._id;
+    const userId = (req.user as any).id;
     getUserById(userId, {password: 0, __v: 0})
         .then((user) => {
             if (!user) {
@@ -158,6 +162,11 @@ router.get('/me', jwtMiddleware, (req: Request, res: Response) => {
 });
 
 
+router.get('/my-authorities', jwtMiddleware, permissionsMiddleware, (req: Request, res: Response) => {
+    const auths = (req as any).authorities;
+    res.send(auths);
+});
+
 /**
  * Get list of available external authentication services (e.g. Google, LinkedIn, Facebook)
  */
@@ -175,7 +184,7 @@ export default router;
 
 
 function externalLogin(req: Request, res: Response) {
-    const userId = (req.user as any)._id;
+    const userId = (req.user as any).id;
     const token = generateToken(userId);
     res.redirect(`${APP_URL}?token=${token}`);
 }

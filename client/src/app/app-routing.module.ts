@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {NotLoggedGuardService} from "./services/guards/not-logged-guard.service";
 import {LoggedGuardService} from "./services/guards/logged-guard.service";
 import {MainComponent} from "./pages/main/main.component";
+import {ResourcePermissionsGuard} from "./services/guards/resourse-permissions.guard";
 
 const routes: Routes = [
     {
@@ -11,10 +12,12 @@ const routes: Routes = [
         component: MainComponent,
         children: [
             {
+                canActivate: [ResourcePermissionsGuard],
                 path: 'user/:userId',
                 loadChildren: () => import('./pages/main/user-page/user-page.module').then(m => m.UserPageModule),
             },
             {
+                canActivate: [ResourcePermissionsGuard],
                 path: 'group/:groupId',
                 loadChildren: () => import('./pages/main/group-page/group-page.module').then(m => m.GroupPageModule),
             },

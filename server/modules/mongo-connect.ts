@@ -21,7 +21,7 @@ plugin((schema: any) => {
         virtuals: true,
         versionKey: false,
         transform(doc: any, ret: any) {
-            ret.id = ret._id;
+            ret.id = ret._id.toString();
             delete ret._id;
         }
     };

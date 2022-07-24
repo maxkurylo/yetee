@@ -63,6 +63,7 @@ app.use("/api/auth", AuthRoutes);
 app.use("/api/groups", GroupsRoutes);
 app.use("/api/users", UsersRoutes);
 
+app.get('/api/*', (req: any, res: any) => { res.status(404).send(); });
 
 
 
