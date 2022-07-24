@@ -27,7 +27,7 @@ export default (req: Request, res: Response, next: any) => {
         return res.status(400).send('No user specified');
     }
 
-    const promises: any = [ getAllRoles() ];
+    const promises: Promise<any>[] = [ getAllRoles() ];
     if (resourceId) {
         promises.push(getAuthoritiesByResourceAndUserId(resourceId, userId));
     } else {

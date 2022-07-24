@@ -10,12 +10,14 @@ import {makeObjectReadonly} from "./init.service";
 })
 export class CurrentUserService {
     private _user: User = { id: '', name: ''};
-    private _authorities: any[] = [];
+    private _authorities: AuthoritiesMap = {};
 
     public set user(currentUser: User ) { this._user = makeObjectReadonly(currentUser) }
     public get user() { return this._user; }
 
-    public set authorities(auths: any[] ) { this._authorities = auths }
+    public set authorities(auths: AuthoritiesMap ) {
+        this._authorities = auths;
+    }
     public get authorities() { return this._authorities; }
 
     constructor(private http: HttpClient) {
@@ -29,4 +31,9 @@ export class CurrentUserService {
     public fetchMyAuthorities(): Observable<any> {
         return this.http.get('/api/auth/my-authorities').pipe(take(1));
     }
+}
+
+
+export interface AuthoritiesMap {
+    [resourceId: string]: Set<string>
 }

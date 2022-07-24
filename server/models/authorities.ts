@@ -10,20 +10,20 @@ const UserAuthoritiesSchema = new Schema<IResourceAuthorities>({
 
 const UserAuthorities = model<IResourceAuthoritiesDocument, IResourceAuthoritiesModel>('Authorities', UserAuthoritiesSchema);
 
-export function getAuthoritiesByUserId(userId: string): Promise<IResourceAuthoritiesDocument[]> {
-    return UserAuthorities.find({ userId }).exec();
+export function getAuthoritiesByUserId(userId: string, projection: any = {}): Promise<IResourceAuthoritiesDocument[]> {
+    return UserAuthorities.find({ userId }, projection).exec();
 }
 
-export function getAuthoritiesByResourceId(resourceId: string): Promise<IResourceAuthoritiesDocument[]> {
-    return UserAuthorities.find({ resourceId }).exec();
+export function getAuthoritiesByResourceId(resourceId: string, projection: any = {}): Promise<IResourceAuthoritiesDocument[]> {
+    return UserAuthorities.find({ resourceId }, projection).exec();
 }
 
-export function getAuthoritiesByResourceIds(resourceIds: Set<string>): Promise<IResourceAuthoritiesDocument[]> {
-    return UserAuthorities.find({ resourceId: { $in: Array.from(resourceIds) } }).exec();
+export function getAuthoritiesByResourceIds(resourceIds: Set<string>, projection: any = {}): Promise<IResourceAuthoritiesDocument[]> {
+    return UserAuthorities.find({ resourceId: { $in: Array.from(resourceIds) } }, projection).exec();
 }
 
-export function getAuthoritiesByResourceAndUserId(resourceId: string, userId: string): Promise<IResourceAuthoritiesDocument[]> {
-    return UserAuthorities.find({ resourceId, userId }).exec();
+export function getAuthoritiesByResourceAndUserId(resourceId: string, userId: string, projection: any = {}): Promise<IResourceAuthoritiesDocument[]> {
+    return UserAuthorities.find({ resourceId, userId }, projection).exec();
 }
 
 export function addUserAuthorities(auths: IResourceAuthorities[]): Promise<IResourceAuthoritiesDocument[]> {
